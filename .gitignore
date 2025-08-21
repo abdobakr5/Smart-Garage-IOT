@@ -4,7 +4,6 @@
 .pub/
 build/
 flutter_*.png
-lib\helpers\supabase_helper_private.dart
 
 # IntelliJ / Android Studio related
 *.iml
@@ -73,3 +72,5 @@ GoogleService-Info.plist
 *.bak
 *.orig
 *.pyc
+
+lib/helpers/supabase_helper_private.dart
