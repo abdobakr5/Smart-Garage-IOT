@@ -16,7 +16,7 @@ Widget customTextField({
       style: const TextStyle(color: Colors.black),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: const TextStyle(color: Color(0xFFAF6767)),
+        hintStyle: const TextStyle(color: Color(0xFF4C4343)),
         filled: true,
         fillColor: Colors.white,
         border: OutlineInputBorder(

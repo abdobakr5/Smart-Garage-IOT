@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Widget buildMenuButton(String text, VoidCallback onPressed) {
+Widget buildMenuButton(BuildContext context, String text, VoidCallback onPressed) {
   return Center(
     child: SizedBox(
       width: 250,

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import '../Widgets/MenuButton.dart';
+import 'DashBoard.dart';
+import 'ControlPage.dart';
+import 'NotificationPage.dart';
 
 class GarageHomePage extends StatelessWidget {
   final String userName;
@@ -33,7 +36,7 @@ class GarageHomePage extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w800,
-                      color: Colors.black87,
+                      color: Color(0xFF271C14),
                     ),
                   ),
                 ),
@@ -61,13 +64,26 @@ class GarageHomePage extends StatelessWidget {
 
             const SizedBox(height: 30),
 
-            buildMenuButton("DASHBOARD", () {}),
+            buildMenuButton(context, "DASHBOARD", () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const Dashboard()),
+              );
+            }),
             const SizedBox(height: 35),
-            buildMenuButton("CONTROL", () {}),
+            buildMenuButton(context, "CONTROL", () {
+              Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ControlPanelMQTT()),
+              );
+            }),
             const SizedBox(height: 35),
-            buildMenuButton("LOGS", () {}),
-            const SizedBox(height: 35),
-            buildMenuButton("NOTIFICATION", () {}),
+            buildMenuButton(context,"NOTIFICATION", () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const NotificationsPage()),
+              );
+            }),
 
             const Spacer(),
 

@@ -180,9 +180,9 @@ class _SignInState extends State<SignIn> {
                           : Text(
                               "Log In",
                               style: GoogleFonts.poppins(
-                                color: const Color(0xFFA7C5EF),
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFF87CEEB),
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                     ),

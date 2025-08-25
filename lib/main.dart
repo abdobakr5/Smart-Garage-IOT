@@ -2,11 +2,16 @@ import 'package:flutter/material.dart';
 import 'Pages/SignIn.dart';
 import 'Pages/RegisterPage.dart';
 import 'helpers/supabase_helper_private.dart';
+import 'helpers/MQTT.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await SupabaseHelper.init();
+
+  final mqttService = MQTTService();
+  await mqttService.connect();
+
   runApp(const MyApp());
 }
 
@@ -18,7 +23,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       initialRoute: '/login',
       routes: {
-        //'/': (context) => const SplashScreen(),
         '/login': (context) => const SignIn(),
         '/register': (context) => const RegisterPage(),
       },
