@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import '../helpers/supabase_helper_private.dart';
+import '../helpers/supabase_helper.dart';
 import 'RegisterPage.dart';
-import 'GarageHomePage.dart';
 import '../Widgets/customtextfield.dart';
 import '../Widgets/SocialButton.dart';
 import 'UserLoader.dart';
@@ -20,7 +18,7 @@ class _SignInState extends State<SignIn> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
 
-  /// SnackBar Helper
+  // SnackBar Helper → Shows success messages only
   void _showSnack(String message, {bool error = false}) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -31,35 +29,79 @@ class _SignInState extends State<SignIn> {
     );
   }
 
-  /// Email & Password SignIn Logic
+  // Dialog Helper → Used for showing login errors
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        title: Row(
+          children: const [
+            Icon(Icons.error_outline, color: Colors.red, size: 28),
+            SizedBox(width: 8),
+            Text("Login Failed", style: TextStyle(color: Colors.red)),
+          ],
+        ),
+        content: Text(
+          message,
+          style: const TextStyle(fontSize: 16, color: Colors.black),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("OK", style: TextStyle(color: Colors.blue)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Handles Email & Password Sign-In Logic
   Future<void> _signInWithEmail() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
 
+    // Validate empty fields first
     if (email.isEmpty || password.isEmpty) {
-      _showSnack("Please enter email & password", error: true);
+      _showErrorDialog("Please enter email & password");
       return;
     }
 
     try {
       setState(() => _isLoading = true);
 
+      // Attempt to sign in using Supabase
       final response = await SupabaseHelper.client.auth.signInWithPassword(
         email: email,
         password: password,
       );
 
+      // Check if login succeeded
       if (response.session != null) {
         _showSnack("Login Successful ✅");
+
+        // Navigate to user loader page after login
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const UserLoaderPage()),
         );
       } else {
-        _showSnack("Invalid email or password!", error: true);
+        _showErrorDialog("Invalid email or password!");
       }
     } catch (e) {
-      _showSnack("Error: ${e.toString()}", error: true);
+      String errorMsg = "Something went wrong. Please try again.";
+
+      // Handle common Supabase errors gracefully
+      if (e.toString().contains("Invalid login credentials")) {
+        errorMsg = "Wrong email or password!";
+      } else if (e.toString().contains("Failed host lookup")) {
+        errorMsg = "Failed to connect to the server!";
+      } else if (e.toString().contains("user_not_found")) {
+        errorMsg = "No account found with this email.";
+      }
+
+      _showErrorDialog(errorMsg);
     } finally {
       setState(() => _isLoading = false);
     }
@@ -71,7 +113,7 @@ class _SignInState extends State<SignIn> {
       body: SingleChildScrollView(
         child: Stack(
           children: [
-            // Background Image
+            // Background image
             Container(
               height: MediaQuery.of(context).size.height,
               decoration: const BoxDecoration(
@@ -82,13 +124,13 @@ class _SignInState extends State<SignIn> {
               ),
             ),
 
-            // Dark Overlay
+            // Semi-transparent dark overlay
             Container(
               height: MediaQuery.of(context).size.height,
               color: Colors.black.withOpacity(0.5),
             ),
 
-            // Main Content
+            // Main content section
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
               child: Column(
@@ -106,7 +148,7 @@ class _SignInState extends State<SignIn> {
                   ),
                   const SizedBox(height: 50),
 
-                  // Subtitle
+                  // Create new account button
                   TextButton(
                     onPressed: () {
                       Navigator.pushReplacement(
@@ -126,6 +168,7 @@ class _SignInState extends State<SignIn> {
                     ),
                   ),
 
+                  // OR separator text
                   Text(
                     "or",
                     style: GoogleFonts.poppins(
@@ -134,8 +177,9 @@ class _SignInState extends State<SignIn> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-
                   const SizedBox(height: 10),
+
+                  // Subtitle for login
                   Text(
                     "Log in with your email",
                     style: GoogleFonts.poppins(
@@ -146,15 +190,15 @@ class _SignInState extends State<SignIn> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Email Field
+                  // Email input field
                   customTextField(
                     controller: _emailController,
                     hint: "email@domain.com",
                     keyboardType: TextInputType.emailAddress,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
 
-                  // Password Field
+                  // Password input field
                   customTextField(
                     controller: _passwordController,
                     hint: "Enter your password",
@@ -162,23 +206,26 @@ class _SignInState extends State<SignIn> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Continue Button
+                  // Login button
                   SizedBox(
-                    width: 400,
+                    width: 150,
                     height: 50,
                     child: ElevatedButton(
                       onPressed: _isLoading ? null : _signInWithEmail,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF000000),
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        backgroundColor: MaterialStateProperty.all(
+                          Colors.black,
                         ),
                       ),
                       child: _isLoading
                           ? const CircularProgressIndicator(color: Colors.white)
                           : Text(
-                              "Log In",
+                              'Log in',
                               style: GoogleFonts.poppins(
                                 color: const Color(0xFF87CEEB),
                                 fontSize: 18,
@@ -213,14 +260,14 @@ class _SignInState extends State<SignIn> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Google Sign In
+                  // Google Sign In Button
                   buildSocialButton(
                     text: 'Continue with Google',
                     assetPath: 'assets/images/google.png',
                     onPressed: () {},
                   ),
 
-                  // Apple Sign In
+                  // Apple Sign In Button
                   buildSocialButton(
                     text: 'Continue with Apple',
                     assetPath: 'assets/images/apple.png',

@@ -12,14 +12,14 @@ class GarageHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Colors.grey[100], // Set background color
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
+        elevation: 0, // Remove app bar shadow
+        backgroundColor: Colors.transparent, // Transparent app bar
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context); // Go back to previous page
           },
         ),
       ),
@@ -32,7 +32,7 @@ class GarageHomePage extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    "Welcome, $userName To Your Garage!",
+                    "Welcome, $userName To Your Garage!", // Welcome message
                     style: const TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w800,
@@ -45,18 +45,15 @@ class GarageHomePage extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-
+            // Divider with small car image
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Expanded(
-                  child: Divider(
-                    color: Colors.blueAccent,
-                    thickness: 1.5,
-                  ),
+                  child: Divider(color: Colors.blueAccent, thickness: 1.5),
                 ),
                 Image.asset(
-                  "assets/images/car1.png",
+                  "assets/images/car1.png", // Small car icon
                   height: 30,
                 ),
               ],
@@ -64,35 +61,44 @@ class GarageHomePage extends StatelessWidget {
 
             const SizedBox(height: 30),
 
+            // Dashboard button
             buildMenuButton(context, "DASHBOARD", () {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const Dashboard()),
               );
             }),
+
             const SizedBox(height: 35),
+
+            // Control button
             buildMenuButton(context, "CONTROL", () {
               Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ControlPanelMQTT()),
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ControlPanelMQTT(),
+                ),
               );
             }),
+
             const SizedBox(height: 35),
-            buildMenuButton(context,"NOTIFICATION", () {
+
+            // Notifications button
+            buildMenuButton(context, "NOTIFICATION", () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const NotificationsPage()),
+                MaterialPageRoute(
+                  builder: (context) => const NotificationsPage(),
+                ),
               );
             }),
 
             const Spacer(),
 
+            // Garage car image at bottom
             Align(
               alignment: Alignment.bottomLeft,
-              child: Image.asset(
-                "assets/images/car.png",
-                height: 60,
-              ),
+              child: Image.asset("assets/images/car.png", height: 60),
             ),
           ],
         ),

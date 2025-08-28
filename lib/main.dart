@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'Pages/SignIn.dart';
 import 'Pages/RegisterPage.dart';
-import 'helpers/supabase_helper_private.dart';
+import 'helpers/supabase_helper.dart';
 import 'helpers/MQTT.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized(); // Ensures Flutter is ready before running async code
 
-  await SupabaseHelper.init();
+  await SupabaseHelper.init(); // Initialize Supabase for authentication & database handling
 
-  final mqttService = MQTTService();
-  await mqttService.connect();
+  final mqttService = MQTTService(); // Create an instance of MQTT service
+  await mqttService.connect(); // Connect to MQTT broker for real-time updates
 
-  runApp(const MyApp());
+  runApp(const MyApp()); // Start the Flutter app
 }
 
 class MyApp extends StatelessWidget {
@@ -22,13 +22,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       initialRoute: '/login',
+      // Default route when the app starts
       routes: {
-        '/login': (context) => const SignIn(),
-        '/register': (context) => const RegisterPage(),
+        '/login': (context) => const SignIn(), // Login page route
+        '/register': (context) => const RegisterPage(), // Register page route
       },
       debugShowCheckedModeBanner: false,
+      // Hide the debug banner
       title: 'Garage Management',
-      home: const SignIn(),
+      // App title
+      home: const SignIn(), // Set SignIn as the default home screen
     );
   }
 }

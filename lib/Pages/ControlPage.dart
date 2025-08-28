@@ -10,22 +10,23 @@ class ControlPanelMQTT extends StatefulWidget {
 }
 
 class _ControlPanelMQTTState extends State<ControlPanelMQTT> {
-  final mqttService = MQTTService();
+  final mqttService = MQTTService(); // Create MQTT service instance
 
-  bool entryDoorOpen = false;
-  bool exitDoorOpen = false;
-  bool ledOn = false;
-  bool buzzerOn = false;
+  bool entryDoorOpen = false; // Track entry door state
+  bool exitDoorOpen = false; // Track exit door state
+  bool ledOn = false; // Track LED state
+  bool buzzerOn = false; // Track buzzer state
 
   @override
   void initState() {
     super.initState();
 
-    // ✅ اسمع الرسائل أول ما الصفحة تفتح
+    // Listen for incoming MQTT messages
     mqttService.onMessageReceived = (data) {
       final topic = data["topic"];
       final message = data["message"];
 
+      // Update UI when message is received
       setState(() {
         switch (topic) {
           case "home/entrydoor":
@@ -45,6 +46,7 @@ class _ControlPanelMQTTState extends State<ControlPanelMQTT> {
     };
   }
 
+  // Toggle device state and send MQTT message
   void _toggleDevice({
     required String topic,
     required bool currentState,
@@ -52,17 +54,18 @@ class _ControlPanelMQTTState extends State<ControlPanelMQTT> {
     required String offMessage,
   }) {
     final message = currentState ? offMessage : onMessage;
-    mqttService.publishMessage(topic, message);
+    mqttService.publishMessage(topic, message); // Publish to MQTT broker
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Control Panel"),
+        title: const Text("Control Panel"), // App bar title
       ),
       body: ListView(
         children: [
+          // Entry Door control
           buildControlItem(
             label: "Entry Door",
             isOn: entryDoorOpen,
@@ -73,6 +76,7 @@ class _ControlPanelMQTTState extends State<ControlPanelMQTT> {
               offMessage: "close",
             ),
           ),
+          // Exit Door control
           buildControlItem(
             label: "Exit Door",
             isOn: exitDoorOpen,
@@ -83,6 +87,7 @@ class _ControlPanelMQTTState extends State<ControlPanelMQTT> {
               offMessage: "close",
             ),
           ),
+          // LED control
           buildControlItem(
             label: "LED",
             isOn: ledOn,
@@ -93,6 +98,7 @@ class _ControlPanelMQTTState extends State<ControlPanelMQTT> {
               offMessage: "off",
             ),
           ),
+          // Buzzer control
           buildControlItem(
             label: "Buzzer",
             isOn: buzzerOn,

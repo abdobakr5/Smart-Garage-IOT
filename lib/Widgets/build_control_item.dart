@@ -5,13 +5,14 @@ Widget buildControlItem({
   required bool isOn,
   required VoidCallback onToggle,
 }) {
-  final isDoor = label.contains("Door");
+  final isDoor = label.contains("Door"); // Check if the control is for a door
 
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Control title
         Text(
           label,
           style: const TextStyle(
@@ -22,7 +23,7 @@ Widget buildControlItem({
         ),
         const SizedBox(height: 10),
 
-
+        // Switch container
         Container(
           decoration: BoxDecoration(
             color: Colors.grey[300],
@@ -37,6 +38,7 @@ Widget buildControlItem({
           ),
           child: Row(
             children: [
+              // Left button (ON / OPEN)
               Expanded(
                 child: GestureDetector(
                   onTap: onToggle,
@@ -51,7 +53,7 @@ Widget buildControlItem({
                     ),
                     alignment: Alignment.center,
                     child: Text(
-                      isDoor ? "open" : "ON",
+                      isDoor ? "open" : "ON", // If it's a door → open
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -62,21 +64,17 @@ Widget buildControlItem({
                 ),
               ),
 
+              // Divider between buttons
+              Container(width: 1, height: 40, color: Colors.grey[400]),
 
-              Container(
-                width: 1,
-                height: 40,
-                color: Colors.grey[400],
-              ),
-
-
+              // Right button (OFF / CLOSE)
               Expanded(
                 child: GestureDetector(
                   onTap: onToggle,
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     decoration: BoxDecoration(
-                      color: !isOn ? Colors.redAccent : Colors.grey[300],
+                      color: !isOn ? Color(0xFF1A2A80) : Colors.grey[300],
                       borderRadius: const BorderRadius.only(
                         topRight: Radius.circular(30),
                         bottomRight: Radius.circular(30),
@@ -84,7 +82,7 @@ Widget buildControlItem({
                     ),
                     alignment: Alignment.center,
                     child: Text(
-                      isDoor ? "close" : "OFF",
+                      isDoor ? "close" : "OFF", // If it's a door → close
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,

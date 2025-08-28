@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
+/// A custom sensor card specifically for gas detection.
+/// Displays gas level, percentage, and the last updated time.
 class SensorCardGas extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final Future<Map<String, dynamic>?> future;
-  final String valueKey;
-  final String timeKey;
+  final IconData icon; // Icon representing the sensor
+  final String title; // Sensor title
+  final Future<Map<String, dynamic>?> future; // Future fetching sensor data
+  final String valueKey; // Key used to access sensor value
+  final String timeKey; // Key used to access timestamp
 
   const SensorCardGas({
     super.key,
@@ -26,29 +28,34 @@ class SensorCardGas extends StatelessWidget {
       child: FutureBuilder<Map<String, dynamic>?>(
         future: future,
         builder: (context, snapshot) {
+          // Show loading spinner while waiting for data
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Card(
               child: Center(child: CircularProgressIndicator()),
             );
           }
+
+          // Show error message if something went wrong
           if (snapshot.hasError) {
-            return Card(
-              child: Center(child: Text("Error: ${snapshot.error}")),
-            );
-          }
-          if (!snapshot.hasData || snapshot.data == null) {
-            return const Card(
-              child: Center(child: Text("No data")),
-            );
+            return Card(child: Center(child: Text("Error: ${snapshot.error}")));
           }
 
+          // Handle case when no data is returned
+          if (!snapshot.hasData || snapshot.data == null) {
+            return const Card(child: Center(child: Text("No data")));
+          }
+
+          // Get the fetched data
           final data = snapshot.data!;
           final dateTime = DateTime.tryParse(data[timeKey].toString());
+
+          // Format timestamp into a "time ago" string
           final timeAgo = dateTime != null
               ? timeago.format(dateTime)
               : "Unknown time";
 
-          final value = (data[valueKey] as num).clamp(0, 100); // تأكد من 0-100
+          // Clamp value between 0 and 100 to avoid UI issues
+          final value = (data[valueKey] as num).clamp(0, 100);
 
           return Card(
             shape: RoundedRectangleBorder(
@@ -61,23 +68,34 @@ class SensorCardGas extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  // Sensor icon
                   Icon(icon, size: 40, color: Colors.black),
                   const SizedBox(height: 10),
+
+                  // Sensor title
                   Text(
                     title,
                     style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 16),
+
+                  // Circular percentage indicator for gas level
                   CircularPercentIndicator(
                     radius: 60,
                     lineWidth: 8,
                     percent: value / 100,
+                    // Convert value to a fraction
                     center: Text(
                       "${value.toInt()}%",
                       style: const TextStyle(
-                          color: Colors.black, fontWeight: FontWeight.bold),
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
+                    // Change color based on gas percentage
                     progressColor: value > 75
                         ? Colors.green
                         : value > 50
@@ -85,6 +103,8 @@ class SensorCardGas extends StatelessWidget {
                         : Colors.red,
                   ),
                   const SizedBox(height: 8),
+
+                  // Display the "last updated" time
                   Text(
                     timeAgo,
                     style: const TextStyle(fontSize: 12, color: Colors.black),

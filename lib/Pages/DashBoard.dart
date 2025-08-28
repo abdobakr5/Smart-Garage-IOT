@@ -11,11 +11,12 @@ class Dashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Sensors Dashboard"),
+        title: const Text("Sensors Dashboard"), // Dashboard title
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(Icons.refresh), // Refresh button
             onPressed: () {
+              // Reload the page without animation
               Navigator.pushReplacement(
                 context,
                 PageRouteBuilder(
@@ -39,6 +40,7 @@ class Dashboard extends StatelessWidget {
                   child: SensorCard(
                     icon: Icons.thermostat,
                     title: "Temperature",
+                    // Show temperature reading
                     future: fetchLatestReading(
                       table: "heat_sensor",
                       valueColumn: "temperature",
@@ -49,11 +51,11 @@ class Dashboard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 12),
-
                 Expanded(
                   child: SensorCardGas(
                     icon: Icons.air_outlined,
                     title: "Air Quality",
+                    // Show gas sensor reading
                     future: fetchLatestReading(
                       table: "gas_sensor",
                       valueColumn: "sensor_reading",
@@ -68,7 +70,7 @@ class Dashboard extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-
+            // Divider for Doors Section
             Row(
               children: [
                 Expanded(
@@ -83,7 +85,7 @@ class Dashboard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    letterSpacing:1,
+                    letterSpacing: 1,
                   ),
                 ),
                 Expanded(
@@ -103,6 +105,7 @@ class Dashboard extends StatelessWidget {
                   child: SensorCard(
                     icon: Icons.login_outlined,
                     title: "Entry Door",
+                    // Entry door sensor
                     future: fetchLatestReading(
                       table: "doors_readings",
                       valueColumn: "entry_status",
@@ -117,6 +120,7 @@ class Dashboard extends StatelessWidget {
                   child: SensorCard(
                     icon: Icons.logout_outlined,
                     title: "Exit Door",
+                    // Exit door sensor
                     future: fetchLatestReading(
                       table: "doors_readings",
                       valueColumn: "exit_status",
@@ -130,6 +134,8 @@ class Dashboard extends StatelessWidget {
             ),
 
             const SizedBox(height: 20),
+
+            // Divider for Parking Slot Section
             Row(
               children: [
                 Expanded(
@@ -144,10 +150,10 @@ class Dashboard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    letterSpacing:1,
+                    letterSpacing: 1,
                   ),
                 ),
-                 Expanded(
+                Expanded(
                   child: Divider(
                     thickness: 2,
                     color: Colors.grey[200],
@@ -157,12 +163,15 @@ class Dashboard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
+
+            // Parking slots row
             Row(
               children: [
                 Expanded(
                   child: SensorCardSlot(
                     icon: Icons.local_parking,
                     title: "Slot 1",
+                    // Parking Slot 1 status
                     future: fetchLatestReading(
                       table: "doors_readings",
                       valueColumn: "slot1",
@@ -177,6 +186,7 @@ class Dashboard extends StatelessWidget {
                   child: SensorCardSlot(
                     icon: Icons.local_parking,
                     title: "Slot 2",
+                    // Parking Slot 2 status
                     future: fetchLatestReading(
                       table: "doors_readings",
                       valueColumn: "slot2",
